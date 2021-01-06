@@ -216,9 +216,10 @@ cv::Mat Tracking::GrabImageRGBD(const cv::Mat &imRGB,const cv::Mat &imD, const d
 }
 
 
-cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp)
+cv::Mat Tracking::GrabImageMonocular(const cv::Mat &im, const double &timestamp, const double &dist)
 {
     mImGray = im;
+    mDist = dist;
 
     if(mImGray.channels()==3)
     {
@@ -668,7 +669,7 @@ void Tracking::CreateInitialMapMonocular()
 
     // Set median depth to 1
     float medianDepth = pKFini->ComputeSceneMedianDepth(2);
-    float invMedianDepth = 1.0f/medianDepth;
+    float invMedianDepth = 1.0f/medianDepth; //tbd esta es la escala
 
     if(medianDepth<0 || pKFcur->TrackedMapPoints(1)<100)
     {
@@ -679,7 +680,8 @@ void Tracking::CreateInitialMapMonocular()
 
     // Scale initial baseline
     cv::Mat Tc2w = pKFcur->GetPose();
-    Tc2w.col(3).rowRange(0,3) = Tc2w.col(3).rowRange(0,3)*invMedianDepth;
+    //Tc2w.col(3).rowRange(0,3) = Tc2w.col(3).rowRange(0,3)*invMedianDepth;
+    Tc2w.col(3).rowRange(0,3) = Tc2w.col(3).rowRange(0,3)*(float)mDist;
     pKFcur->SetPose(Tc2w);
 
     // Scale points

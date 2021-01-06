@@ -77,7 +77,7 @@ public:
     // Process the given monocular frame
     // Input images: RGB (CV_8UC3) or grayscale (CV_8U). RGB is converted to grayscale.
     // Returns the camera pose (empty if tracking fails).
-    void TrackMonocular(const cv::Mat &im, const double &timestamp);
+    void TrackMonocular(const cv::Mat &im, const double &timestamp, const double &dist);
 
     // Returns true if there have been a big map change (loop closure, global BA)
     // since last call to this function

@@ -30,6 +30,7 @@
 #include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
+#include <nav_msgs/Odometry.h>
 #include <opencv2/core/core.hpp>
 #include <tf/transform_broadcaster.h>
 
@@ -43,9 +44,30 @@ class MonoNode : public Node
     MonoNode (const ORB_SLAM2::System::eSensor sensor, ros::NodeHandle &node_handle, image_transport::ImageTransport &image_transport);
     ~MonoNode ();
     void ImageCallback (const sensor_msgs::ImageConstPtr& msg);
+    void OdomCallback (const nav_msgs::Odometry::ConstPtr& msg);
+    ros::Subscriber odom_subscriber;
+    double _px,_py,_pz,_dist;
+
 
   private:
     image_transport::Subscriber image_subscriber;
+
 };
+/*
+class OdomHandler
+{
+  public:
+    OdomHandler();
+    ~OdomHandler();
+    void OdomCallback (const nav_msgs::Odometry::ConstPtr& msg);
+    const double& getDist(){
+      return _dist;
+    }
+    double _dist;
+
+  private:
+    double _px,_py,_pz;
+    //ros::Subscriber odom_subscriber;
+};*/
 
 #endif //ORBSLAM2_ROS_MONONODE_H_
